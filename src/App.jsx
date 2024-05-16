@@ -8,7 +8,7 @@ const App = () => {
   const [fontSize, setFontSize] = useState('medium');
   const [fontFamily, setFontFamily] = useState('Arial');
   const [fontColor, setFontColor] = useState('#000000');
-  const [textCase, setTextCase] = useState('none');
+  const [textCase, setTextCase] = useState('none'); // Add state for text case
 
   // Function to handle typing characters
   const handleKeyPress = (character) => {
@@ -36,10 +36,9 @@ const App = () => {
     setFontColor(selectedColor);
   };
 
-  // Function to handle changing text case
-  const handleChangeTextCase = (selectedCase) => {
-    setTextCase(selectedCase);
-    // Logic to change text case of the entire text
+  // Function to handle toggling text case
+  const handleToggleTextCase = () => {
+    setTextCase(textCase === 'uppercase' ? 'none' : 'uppercase');
   };
 
   // Function to handle special actions
@@ -89,9 +88,9 @@ const App = () => {
             {/* Add more font family options */}
           </select>
           <input type="color" onChange={(e) => handleChangeFontColor(e.target.value)} />
-          <button onClick={() => handleChangeTextCase('uppercase')}>Uppercase</button>
-          <button onClick={() => handleChangeTextCase('lowercase')}>Lowercase</button>
-          {/* Add more formatting options */}
+        </div>
+        <div className="text-case-option">
+          <button onClick={handleToggleTextCase}>{textCase === 'uppercase' ? 'Uppercase' : 'Lowercase'}</button>
         </div>
         <div className="special-actions">
           <button onClick={() => handleSpecialAction('delete')}>Delete</button>
@@ -99,7 +98,7 @@ const App = () => {
           {/* Add more special actions */}
         </div>
       </div>
-      <Keyboard onKeyPress={handleKeyPress} language={language} />
+      <Keyboard onKeyPress={handleKeyPress} language={language} textCase={textCase} />
     </div>
   );
 };

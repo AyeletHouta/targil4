@@ -1,6 +1,6 @@
 import React from 'react';
-/*jjjj */
-const Keyboard = ({ onKeyPress, language }) => {
+
+const Keyboard = ({ onKeyPress, language, textCase }) => {
   // Define keyboard layouts for different languages
   const englishLayout = [
     'qwertyuiop',
@@ -10,6 +10,16 @@ const Keyboard = ({ onKeyPress, language }) => {
     ',.?!"\'',
     ' ',
   ];
+
+  const englishCapitalLayout = [
+    'QWERTYUIOP',
+    'ASDFGHJKL',
+    'ZXCVBNM',
+    '1234567890',
+    ',.?!"\'',
+    ' ',
+  ];
+
   const hebrewLayout = [
     'קראטוןםפ',
     'םןויחלך',
@@ -18,6 +28,7 @@ const Keyboard = ({ onKeyPress, language }) => {
     ',.?!"\'',
     ' ',
   ];
+
   const emojiLayout = [
     '😀😁😂🤣',
     '😃😄😅😆',
@@ -27,12 +38,13 @@ const Keyboard = ({ onKeyPress, language }) => {
     ' ',
   ];
 
-  const renderKeyboardLayout = (layout) => {
+  // Function to render keyboard layout
+  const renderLayout = (layout) => {
     return layout.map((row, rowIndex) => (
       <div key={rowIndex} className="keyboard-row">
         {row.split('').map((char, charIndex) => (
-          <button key={charIndex} onClick={() => onKeyPress(char)}>
-            {char}
+          <button key={charIndex} onClick={() => onKeyPress(textCase === 'uppercase' ? char.toUpperCase() : char)}>
+            {textCase === 'uppercase' ? char.toUpperCase() : char}
           </button>
         ))}
       </div>
@@ -42,7 +54,7 @@ const Keyboard = ({ onKeyPress, language }) => {
   let selectedLayout;
   switch (language) {
     case 'english':
-      selectedLayout = englishLayout;
+      selectedLayout = textCase === 'uppercase' ? englishCapitalLayout : englishLayout;
       break;
     case 'hebrew':
       selectedLayout = hebrewLayout;
@@ -56,7 +68,8 @@ const Keyboard = ({ onKeyPress, language }) => {
 
   return (
     <div className="keyboard">
-      {renderKeyboardLayout(selectedLayout)}
+      {/* Render keyboard layout based on selected language */}
+      {renderLayout(selectedLayout)}
     </div>
   );
 };
