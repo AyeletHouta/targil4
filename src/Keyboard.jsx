@@ -1,5 +1,5 @@
 import React from 'react';
-
+/*jjjj */
 const Keyboard = ({ onKeyPress, language }) => {
   // Define keyboard layouts for different languages
   const englishLayout = [
