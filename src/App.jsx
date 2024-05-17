@@ -170,9 +170,9 @@ const App = () => {
           <button onClick={handleConvertToUpper}>Upper All</button>
         </div>
         <div className="special-actions">
-          <button onClick={() => handleSpecialAction('delete')}>Delete</button>
-          <button onClick={() => handleSpecialAction('clear')}>Clear</button>
-          <button onClick={handleUndo}>Undo</button>
+          <button onClick={() => handleSpecialAction('delete')}><img src="delete.png" /></button>
+          <button onClick={() => handleSpecialAction('clear')}><img src="clear.png" /></button>
+          <button onClick={handleUndo}><img src="undo.png" /></button>
         </div>
       </div>
       <Keyboard onKeyPress={(char) => {

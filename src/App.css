@@ -48,3 +48,5 @@ textarea {
 .keyboard button:hover {
   background-color: #f0f0f0;
 }
+
+img{ width: 30px; height: 27px; }
