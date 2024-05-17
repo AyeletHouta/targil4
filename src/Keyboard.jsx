@@ -43,12 +43,31 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
     return layout.map((row, rowIndex) => (
       <div key={rowIndex} className="keyboard-row">
         {Array.from(row).map((char, charIndex) => (
-          <button key={charIndex} onClick={() => onKeyPress(textCase === 'uppercase' ? char.toUpperCase() : char)}>
+          <button
+            key={charIndex}
+            onClick={() =>
+              onKeyPress(
+                textCase === 'uppercase' ? char.toUpperCase() : char,
+                char === ' ' ? 'space' : char === '\n' ? 'enter' : char
+              )
+            }
+          >
             {textCase === 'uppercase' ? char.toUpperCase() : char}
+            {char === ' ' && <span className="key-label">space</span>}
           </button>
         ))}
       </div>
     ));
+  };
+
+  const handleKeyPress = (char, value) => {
+    if (value === 'space') {
+      // Add a space character
+      onKeyPress(' ', 'space');
+    } else {
+      // Regular character key press
+      onKeyPress(char, value);
+    }
   };
 
   let selectedLayout;
