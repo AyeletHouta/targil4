@@ -158,6 +158,8 @@ const App = () => {
           <button onClick={() => handleChangeFontSize('small')}>Small</button>
           <button onClick={() => handleChangeFontSize('medium')}>Medium</button>
           <button onClick={() => handleChangeFontSize('large')}>Large</button>
+        </div>
+        <div className="formatting-options">
           <select onChange={(e) => handleChangeFontFamily(e.target.value)}>
             <option value="Arial">Arial</option>
             <option value="Times New Roman">Times New Roman</option>
