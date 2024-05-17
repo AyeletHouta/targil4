@@ -4,6 +4,15 @@
   align-items: center;
 }
 
+.editable-text {
+  border: 1px solid black;
+  padding: 10px; /* Adjust padding as needed */
+  min-height: 100px; /* Set a minimum height to ensure visibility */
+  box-sizing: border-box; 
+  width: 400px;
+}
+
+
 .text-editor {
   margin-bottom: 20px;
 }

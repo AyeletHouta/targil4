@@ -122,15 +122,17 @@ const App = () => {
     }
   };
 
-  // Function to update text state and history
-  const updateTextState = () => {
-    saveHistory();
-    setText(document.querySelector('.editable-text').innerHTML);
-  };
+  
 
   // Function to save the current text state to history
   const saveHistory = () => {
     setHistory((prevHistory) => [...prevHistory, text]);
+  };
+
+  // Function to update text state
+  const updateTextState = (e) => {
+    saveHistory();
+    setText(e.target.innerHTML);
   };
 
   return (
@@ -139,14 +141,16 @@ const App = () => {
         <div
           className="editable-text"
           contentEditable
-          dangerouslySetInnerHTML={{ __html: text || '<p><br></p>' }}
           style={{
             fontSize: fontSize,
             fontFamily: fontFamily,
             color: fontColor,
           }}
-          onInput={(e) => updateTextState()}
-        />
+          onInput={updateTextState}
+        >
+          {text === '' ? <div className="placeholder">Start typing here...</div> : null}
+          {text}
+        </div>
       </div>
       <div className="options">
         <div className="language-options">
