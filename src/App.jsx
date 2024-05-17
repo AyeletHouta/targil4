@@ -4,6 +4,7 @@ import Keyboard from './Keyboard';
 
 const App = () => {
   const [text, setText] = useState('');
+  const [history, setHistory] = useState([]); // State to keep track of the text history
   const [language, setLanguage] = useState('english');
   const [fontSize, setFontSize] = useState('medium');
   const [fontFamily, setFontFamily] = useState('Arial');
@@ -16,30 +17,30 @@ const App = () => {
     if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
       const range = selection.getRangeAt(0);
       const documentFragment = range.cloneContents();
-  
+
       // Create a span to wrap the entire selection
       const span = document.createElement('span');
       span.style[styleName] = styleValue;
-  
+
       // Get all child elements (spans) within the range
       const childSpans = documentFragment.querySelectorAll('span');
-  
+
       // Apply the style to each child span individually
       childSpans.forEach((childSpan) => {
         childSpan.style[styleName] = styleValue;
       });
-  
+
       // Clear the original selection
       range.deleteContents();
-  
+
       // Append the cloned content to the span
       span.appendChild(documentFragment);
-  
+
       // Insert the styled span into the document
       range.insertNode(span);
-  
+
       // Update the text state with the new HTML
-      setText(document.querySelector('.editable-text').innerHTML);
+      updateTextState();
     }
   };
 
@@ -51,7 +52,7 @@ const App = () => {
   // Function to handle changing font size
   const handleChangeFontSize = (selectedSize) => {
     let fontSizeValue;
-  
+
     if (selectedSize === 'small') {
       fontSizeValue = '15px';
     } else if (selectedSize === 'medium') {
@@ -59,7 +60,7 @@ const App = () => {
     } else if (selectedSize === 'large') {
       fontSizeValue = '45px';
     }
-  
+
     if (fontSizeValue && window.getSelection().toString()) {
       applyStyleToSelection('fontSize', fontSizeValue);
     }
@@ -87,11 +88,13 @@ const App = () => {
 
   // Function to handle converting all text to lowercase
   const handleConvertToLower = () => {
+    saveHistory();
     setText(text.toLowerCase());
   };
 
   // Function to handle converting all text to uppercase
   const handleConvertToUpper = () => {
+    saveHistory();
     setText(text.toUpperCase());
   };
 
@@ -102,11 +105,32 @@ const App = () => {
       if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         range.deleteContents();
-        setText(document.querySelector('.editable-text').innerHTML);
+        updateTextState();
       }
     } else if (action === 'clear') {
+      saveHistory(); // Save the current state to history
       setText('');
     }
+  };
+
+  // Function to handle the undo action
+  const handleUndo = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setHistory(history.slice(0, -1));
+      setText(previousState);
+    }
+  };
+
+  // Function to update text state and history
+  const updateTextState = () => {
+    saveHistory();
+    setText(document.querySelector('.editable-text').innerHTML);
+  };
+
+  // Function to save the current text state to history
+  const saveHistory = () => {
+    setHistory((prevHistory) => [...prevHistory, text]);
   };
 
   return (
@@ -121,7 +145,7 @@ const App = () => {
             fontFamily: fontFamily,
             color: fontColor,
           }}
-          onInput={(e) => setText(e.currentTarget.innerHTML)}
+          onInput={(e) => updateTextState()}
         />
       </div>
       <div className="options">
@@ -148,9 +172,13 @@ const App = () => {
         <div className="special-actions">
           <button onClick={() => handleSpecialAction('delete')}>Delete</button>
           <button onClick={() => handleSpecialAction('clear')}>Clear</button>
+          <button onClick={handleUndo}>Undo</button>
         </div>
       </div>
-      <Keyboard onKeyPress={(char) => setText(text + char)} language={language} textCase={textCase} />
+      <Keyboard onKeyPress={(char) => {
+        saveHistory(); // Save history before adding new text
+        setText(text + char);
+      }} language={language} textCase={textCase} />
     </div>
   );
 };
