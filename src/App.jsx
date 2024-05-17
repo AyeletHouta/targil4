@@ -43,31 +43,6 @@ const App = () => {
     }
   };
 
-  // Function to apply text transformation to selected text
-  const applyTextTransformationToSelection = (transformation) => {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-      const range = selection.getRangeAt(0);
-      const documentFragment = range.cloneContents();
-
-      // Create a span to wrap the entire selection
-      const span = document.createElement('span');
-      span.style.textTransform = transformation;
-
-      // Clear the original selection
-      range.deleteContents();
-
-      // Append the cloned content to the span
-      span.appendChild(documentFragment);
-
-      // Insert the transformed span into the document
-      range.insertNode(span);
-
-      // Update the text state with the new HTML
-      setText(document.querySelector('.editable-text').innerHTML);
-    }
-  };
-
   // Function to handle changing language
   const handleChangeLanguage = (selectedLanguage) => {
     setLanguage(selectedLanguage);
@@ -75,8 +50,18 @@ const App = () => {
 
   // Function to handle changing font size
   const handleChangeFontSize = (selectedSize) => {
-    if (window.getSelection().toString()) {
-      applyStyleToSelection('fontSize', selectedSize);
+    let fontSizeValue;
+  
+    if (selectedSize === 'small') {
+      fontSizeValue = '15px';
+    } else if (selectedSize === 'medium') {
+      fontSizeValue = '30px';
+    } else if (selectedSize === 'large') {
+      fontSizeValue = '45px';
+    }
+  
+    if (fontSizeValue && window.getSelection().toString()) {
+      applyStyleToSelection('fontSize', fontSizeValue);
     }
   };
 
@@ -98,6 +83,16 @@ const App = () => {
   const handleToggleTextCase = () => {
     const transformation = textCase === 'uppercase' ? 'none' : 'uppercase';
     setTextCase(transformation);
+  };
+
+  // Function to handle converting all text to lowercase
+  const handleConvertToLower = () => {
+    setText(text.toLowerCase());
+  };
+
+  // Function to handle converting all text to uppercase
+  const handleConvertToUpper = () => {
+    setText(text.toUpperCase());
   };
 
   // Function to handle special actions
@@ -125,7 +120,6 @@ const App = () => {
             fontSize: fontSize,
             fontFamily: fontFamily,
             color: fontColor,
-            textTransform: 'none', // Remove global textTransform
           }}
           onInput={(e) => setText(e.currentTarget.innerHTML)}
         />
@@ -147,7 +141,9 @@ const App = () => {
           <input type="color" onChange={(e) => handleChangeFontColor(e.target.value)} />
         </div>
         <div className="text-case-option">
-          <button onClick={handleToggleTextCase}>{textCase === 'uppercase' ? 'Uppercase' : 'Lowercase'}</button>
+          <button onClick={handleToggleTextCase}>{'caps lock'}</button>
+          <button onClick={handleConvertToLower}>Lower All</button>
+          <button onClick={handleConvertToUpper}>Upper All</button>
         </div>
         <div className="special-actions">
           <button onClick={() => handleSpecialAction('delete')}>Delete</button>
