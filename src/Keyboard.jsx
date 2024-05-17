@@ -42,7 +42,7 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
   const renderLayout = (layout) => {
     return layout.map((row, rowIndex) => (
       <div key={rowIndex} className="keyboard-row">
-        {row.split('').map((char, charIndex) => (
+        {Array.from(row).map((char, charIndex) => (
           <button key={charIndex} onClick={() => onKeyPress(textCase === 'uppercase' ? char.toUpperCase() : char)}>
             {textCase === 'uppercase' ? char.toUpperCase() : char}
           </button>
