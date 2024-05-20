@@ -11,73 +11,24 @@ const App = () => {
   const [fontColor, setFontColor] = useState('#000000');
   const [textCase, setTextCase] = useState('none');
 
-  // Function to apply style to selected text
-  const applyStyleToSelection = (styleName, styleValue) => {
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-      const range = selection.getRangeAt(0);
-      const documentFragment = range.cloneContents();
-
-      // Create a span to wrap the entire selection
-      const span = document.createElement('span');
-      span.style[styleName] = styleValue;
-
-      // Get all child elements (spans) within the range
-      const childSpans = documentFragment.querySelectorAll('span');
-
-      // Apply the style to each child span individually
-      childSpans.forEach((childSpan) => {
-        childSpan.style[styleName] = styleValue;
-      });
-
-      // Clear the original selection
-      range.deleteContents();
-
-      // Append the cloned content to the span
-      span.appendChild(documentFragment);
-
-      // Insert the styled span into the document
-      range.insertNode(span);
-
-      // Update the text state with the new HTML
-      updateTextState();
-    }
-  };
-
   // Function to handle changing language
   const handleChangeLanguage = (selectedLanguage) => {
     setLanguage(selectedLanguage);
   };
 
-  // Function to handle changing font size
-  const handleChangeFontSize = (selectedSize) => {
-    let fontSizeValue;
-
-    if (selectedSize === 'small') {
-      fontSizeValue = '15px';
-    } else if (selectedSize === 'medium') {
-      fontSizeValue = '30px';
-    } else if (selectedSize === 'large') {
-      fontSizeValue = '45px';
-    }
-
-    if (fontSizeValue && window.getSelection().toString()) {
-      applyStyleToSelection('fontSize', fontSizeValue);
-    }
-  };
-
   // Function to handle changing font family
   const handleChangeFontFamily = (selectedFont) => {
-    if (window.getSelection().toString()) {
-      applyStyleToSelection('fontFamily', selectedFont);
-    }
+    setFontFamily(selectedFont);
   };
 
   // Function to handle changing font color
   const handleChangeFontColor = (selectedColor) => {
-    if (window.getSelection().toString()) {
-      applyStyleToSelection('color', selectedColor);
-    }
+    setFontColor(selectedColor);
+  };
+
+  // Function to handle changing font size
+  const handleChangeFontSize = (selectedSize) => {
+    setFontSize(selectedSize);
   };
 
   // Function to handle toggling text case
@@ -101,6 +52,7 @@ const App = () => {
   // Function to handle special actions
   const handleSpecialAction = (action) => {
     if (action === 'delete') {
+      saveHistory();
       setText(text.slice(0, -1));
     } else if (action === 'clear') {
       saveHistory(); // Save the current state to history
@@ -117,8 +69,6 @@ const App = () => {
     }
   };
 
-  
-
   // Function to save the current text state to history
   const saveHistory = () => {
     setHistory((prevHistory) => [...prevHistory, text]);
@@ -126,8 +76,29 @@ const App = () => {
 
   // Function to update text state
   const updateTextState = (e) => {
-    saveHistory();
-    setText(e.target.innerHTML);
+    const newText = e.target.innerText;
+    const caretPosition = window.getSelection().getRangeAt(0).startOffset;
+
+    if (newText.length > text.length) {
+      const typedText = newText.substring(text.length);
+      const styledTypedText = `<span style="font-family: ${fontFamily}; color: ${fontColor}; font-size: ${fontSize}">${typedText}</span>`;
+      const updatedText = text + styledTypedText;
+
+      setText(updatedText);
+
+      // Update the contentEditable div directly
+      e.target.innerHTML = updatedText;
+
+      // Set the cursor position back to the end of the new text
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setStart(e.target.childNodes[e.target.childNodes.length - 1], typedText.length);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else {
+      setText(newText); // Handle text deletion
+    }
   };
 
   return (
@@ -136,15 +107,10 @@ const App = () => {
         <div
           className="editable-text"
           contentEditable
-          style={{
-            fontSize: fontSize,
-            fontFamily: fontFamily,
-            color: fontColor,
-          }}
           onInput={updateTextState}
         >
           {text === '' ? <div className="placeholder">Start typing here...</div> : null}
-          {text}
+          <div dangerouslySetInnerHTML={{ __html: text }}></div>
         </div>
       </div>
       <div className="options">
@@ -171,14 +137,15 @@ const App = () => {
           <button onClick={handleConvertToUpper}>Upper All</button>
         </div>
         <div className="special-actions">
-          <button onClick={() => handleSpecialAction('delete')}><img src="delete.png" /></button>
-          <button onClick={() => handleSpecialAction('clear')}><img src="clear.png" /></button>
-          <button onClick={handleUndo}><img src="undo.png" /></button>
+          <button onClick={() => handleSpecialAction('delete')}><img src="delete.png" alt="delete" /></button>
+          <button onClick={() => handleSpecialAction('clear')}><img src="clear.png" alt="clear" /></button>
+          <button onClick={handleUndo}><img src="undo.png" alt="undo" /></button>
         </div>
       </div>
       <Keyboard onKeyPress={(char) => {
         saveHistory(); // Save history before adding new text
-        setText(text + char);
+        const styledChar = `<span style="font-family: ${fontFamily}; color: ${fontColor}; font-size: ${fontSize}">${char}</span>`;
+        setText(text + styledChar);
       }} language={language} textCase={textCase} />
     </div>
   );
