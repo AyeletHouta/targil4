@@ -101,12 +101,7 @@ const App = () => {
   // Function to handle special actions
   const handleSpecialAction = (action) => {
     if (action === 'delete') {
-      const selection = window.getSelection();
-      if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        range.deleteContents();
-        updateTextState();
-      }
+      setText(text.slice(0, -1));
     } else if (action === 'clear') {
       saveHistory(); // Save the current state to history
       setText('');
