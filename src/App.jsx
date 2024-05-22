@@ -10,10 +10,14 @@ const App = () => {
   const [fontFamily, setFontFamily] = useState('Arial');
   const [fontColor, setFontColor] = useState('#000000');
   const [textCase, setTextCase] = useState('none');
+  const [activeFontSize, setActiveFontSize] = useState('medium');
+  const [activeLanguage, setActiveLanguage] = useState('english');
+  const [isCapsLockActive, setIsCapsLockActive] = useState(false);
 
   // Function to handle changing language
   const handleChangeLanguage = (selectedLanguage) => {
     setLanguage(selectedLanguage);
+    setActiveLanguage(selectedLanguage);
   };
 
   // Function to handle changing font family
@@ -29,12 +33,14 @@ const App = () => {
   // Function to handle changing font size
   const handleChangeFontSize = (selectedSize) => {
     setFontSize(selectedSize);
+    setActiveFontSize(selectedSize);
   };
 
   // Function to handle toggling text case
   const handleToggleTextCase = () => {
     const transformation = textCase === 'uppercase' ? 'none' : 'uppercase';
     setTextCase(transformation);
+    setIsCapsLockActive(transformation === 'uppercase');
   };
 
   // Function to handle converting all text to lowercase
@@ -94,14 +100,44 @@ const App = () => {
       </div>
       <div className="options">
         <div className="language-options">
-          <button onClick={() => handleChangeLanguage('english')}>English</button>
-          <button onClick={() => handleChangeLanguage('hebrew')}>Hebrew</button>
-          <button onClick={() => handleChangeLanguage('emojis')}>Emojis</button>
+          <button 
+            onClick={() => handleChangeLanguage('english')}
+            style={{ backgroundColor: activeLanguage === 'english' ? 'lightblue' : 'white' }}
+          >
+            English
+          </button>
+          <button 
+            onClick={() => handleChangeLanguage('hebrew')}
+            style={{ backgroundColor: activeLanguage === 'hebrew' ? 'lightblue' : 'white' }}
+          >
+            Hebrew
+          </button>
+          <button 
+            onClick={() => handleChangeLanguage('emojis')}
+            style={{ backgroundColor: activeLanguage === 'emojis' ? 'lightblue' : 'white' }}
+          >
+            Emojis
+          </button>
         </div>
         <div className="formatting-options">
-          <button onClick={() => handleChangeFontSize('small')}>Small</button>
-          <button onClick={() => handleChangeFontSize('medium')}>Medium</button>
-          <button onClick={() => handleChangeFontSize('large')}>Large</button>
+          <button 
+            onClick={() => handleChangeFontSize('small')}
+            style={{ backgroundColor: activeFontSize === 'small' ? 'lightblue' : 'white' }}
+          >
+            Small
+          </button>
+          <button 
+            onClick={() => handleChangeFontSize('medium')}
+            style={{ backgroundColor: activeFontSize === 'medium' ? 'lightblue' : 'white' }}
+          >
+            Medium
+          </button>
+          <button 
+            onClick={() => handleChangeFontSize('large')}
+            style={{ backgroundColor: activeFontSize === 'large' ? 'lightblue' : 'white' }}
+          >
+            Large
+          </button>
         </div>
         <div className="formatting-options">
           <select onChange={(e) => handleChangeFontFamily(e.target.value)}>
@@ -111,7 +147,12 @@ const App = () => {
           <input type="color" onChange={(e) => handleChangeFontColor(e.target.value)} />
         </div>
         <div className="text-case-option">
-          <button onClick={handleToggleTextCase}>{'caps lock'}</button>
+          <button 
+            onClick={handleToggleTextCase}
+            style={{ backgroundColor: isCapsLockActive ? 'lightblue' : 'white' }}
+          >
+            {'caps lock'}
+          </button>
           <button onClick={handleConvertToLower}>Lower All</button>
           <button onClick={handleConvertToUpper}>Upper All</button>
         </div>
