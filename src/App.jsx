@@ -53,7 +53,8 @@ const App = () => {
   const handleSpecialAction = (action) => {
     if (action === 'delete') {
       saveHistory();
-      setText(text.slice(0, -1));
+      const newText = text.replace(/<span[^>]*>[^<]*<\/span>$/, '');
+      setText(newText);
     } else if (action === 'clear') {
       saveHistory(); // Save the current state to history
       setText('');
@@ -74,31 +75,10 @@ const App = () => {
     setHistory((prevHistory) => [...prevHistory, text]);
   };
 
-  // Function to update text state
   const updateTextState = (e) => {
-    const newText = e.target.innerText;
-    const caretPosition = window.getSelection().getRangeAt(0).startOffset;
-
-    if (newText.length > text.length) {
-      const typedText = newText.substring(text.length);
-      const styledTypedText = `<span style="font-family: ${fontFamily}; color: ${fontColor}; font-size: ${fontSize}">${typedText}</span>`;
-      const updatedText = text + styledTypedText;
-
-      setText(updatedText);
-
-      // Update the contentEditable div directly
-      e.target.innerHTML = updatedText;
-
-      // Set the cursor position back to the end of the new text
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.setStart(e.target.childNodes[e.target.childNodes.length - 1], typedText.length);
-      range.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    } else {
-      setText(newText); // Handle text deletion
-    }
+    const newText = e.target.innerHTML;
+    saveHistory();
+    setText(newText);
   };
 
   return (
@@ -108,10 +88,9 @@ const App = () => {
           className="editable-text"
           contentEditable
           onInput={updateTextState}
-        >
-          {text === '' ? <div className="placeholder">Start typing here...</div> : null}
-          <div dangerouslySetInnerHTML={{ __html: text }}></div>
-        </div>
+          style={{ fontFamily, color: fontColor, fontSize }}
+          dangerouslySetInnerHTML={{ __html: text }}
+        />
       </div>
       <div className="options">
         <div className="language-options">
