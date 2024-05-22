@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import './App.css'; // Import CSS for styling
+import './App.css';
 import Keyboard from './Keyboard';
 
 const App = () => {
   const [text, setText] = useState('');
-  const [history, setHistory] = useState([]); // State to keep track of the text history
+  const [history, setHistory] = useState([]);
   const [language, setLanguage] = useState('english');
   const [fontSize, setFontSize] = useState('medium');
   const [fontFamily, setFontFamily] = useState('Arial');
@@ -14,60 +14,51 @@ const App = () => {
   const [activeLanguage, setActiveLanguage] = useState('english');
   const [isCapsLockActive, setIsCapsLockActive] = useState(false);
 
-  // Function to handle changing language
   const handleChangeLanguage = (selectedLanguage) => {
     setLanguage(selectedLanguage);
     setActiveLanguage(selectedLanguage);
   };
 
-  // Function to handle changing font family
   const handleChangeFontFamily = (selectedFont) => {
     setFontFamily(selectedFont);
   };
 
-  // Function to handle changing font color
   const handleChangeFontColor = (selectedColor) => {
     setFontColor(selectedColor);
   };
 
-  // Function to handle changing font size
   const handleChangeFontSize = (selectedSize) => {
     setFontSize(selectedSize);
     setActiveFontSize(selectedSize);
   };
 
-  // Function to handle toggling text case
   const handleToggleTextCase = () => {
     const transformation = textCase === 'uppercase' ? 'none' : 'uppercase';
     setTextCase(transformation);
     setIsCapsLockActive(transformation === 'uppercase');
   };
 
-  // Function to handle converting all text to lowercase
   const handleConvertToLower = () => {
     saveHistory();
     setText(text.toLowerCase());
   };
 
-  // Function to handle converting all text to uppercase
   const handleConvertToUpper = () => {
     saveHistory();
     setText(text.toUpperCase());
   };
 
-  // Function to handle special actions
   const handleSpecialAction = (action) => {
     if (action === 'delete') {
       saveHistory();
       const newText = text.replace(/<span[^>]*>[^<]*<\/span>$/, '');
       setText(newText);
     } else if (action === 'clear') {
-      saveHistory(); // Save the current state to history
+      saveHistory(); 
       setText('');
     }
   };
 
-  // Function to handle the undo action
   const handleUndo = () => {
     if (history.length > 0) {
       const previousState = history[history.length - 1];
@@ -76,7 +67,6 @@ const App = () => {
     }
   };
 
-  // Function to save the current text state to history
   const saveHistory = () => {
     setHistory((prevHistory) => [...prevHistory, text]);
   };
@@ -163,8 +153,8 @@ const App = () => {
         </div>
       </div>
       <Keyboard onKeyPress={(char) => {
-        saveHistory(); // Save history before adding new text
-        const styledChar = `<span style="font-family: ${fontFamily}; color: ${fontColor}; font-size: ${fontSize}">${char}</span>`;
+        saveHistory();
+        const styledChar = `<span style="font-family: ${fontFamily}; color: ${fontColor}; font-size: ${fontSize}">${char === ' ' ? '&nbsp;' : char}</span>`;
         setText(text + styledChar);
       }} language={language} textCase={textCase} />
     </div>

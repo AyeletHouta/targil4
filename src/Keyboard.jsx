@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Keyboard = ({ onKeyPress, language, textCase }) => {
-  // Define keyboard layouts for different languages
   const englishLayout = [
     'qwertyuiop',
     'asdfghjkl',
@@ -38,7 +37,6 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
     ' ',
   ];
 
-  // Function to render keyboard layout
   const renderLayout = (layout) => {
     return layout.map((row, rowIndex) => (
       <div key={rowIndex} className="keyboard-row">
@@ -47,8 +45,7 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
             key={charIndex}
             onClick={() =>
               onKeyPress(
-                textCase === 'uppercase' ? char.toUpperCase() : char,
-                char === ' ' ? 'space' : char === '\n' ? 'enter' : char
+                textCase === 'uppercase' ? char.toUpperCase() : char
               )
             }
           >
@@ -58,16 +55,6 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
         ))}
       </div>
     ));
-  };
-
-  const handleKeyPress = (char, value) => {
-    if (value === 'space') {
-      // Add a space character
-      onKeyPress(' ', 'space');
-    } else {
-      // Regular character key press
-      onKeyPress(char, value);
-    }
   };
 
   let selectedLayout;
@@ -87,7 +74,6 @@ const Keyboard = ({ onKeyPress, language, textCase }) => {
 
   return (
     <div className="keyboard">
-      {/* Render keyboard layout based on selected language */}
       {renderLayout(selectedLayout)}
     </div>
   );
