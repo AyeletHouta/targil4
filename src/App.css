@@ -1,7 +1,11 @@
+:root{
+  margin:0px !important;
+}
 .app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 30px;
 }
 
 .editable-text {
@@ -10,8 +14,12 @@
   min-height: 100px; /* Set a minimum height to ensure visibility */
   box-sizing: border-box; 
   width: 400px;
+  background-color: white;
 }
 
+body {
+  background-color: #98f0b5;
+}
 
 .text-editor {
   margin-bottom: 20px;
@@ -48,7 +56,7 @@ textarea {
 .keyboard button {
   padding: 10px 15px;
   margin: 5px;
-  font-size: 16px;
+  font-size: 23px;
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;

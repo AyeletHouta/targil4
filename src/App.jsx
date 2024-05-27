@@ -6,7 +6,7 @@ const App = () => {
   const [text, setText] = useState('');
   const [history, setHistory] = useState([]);
   const [language, setLanguage] = useState('english');
-  const [fontSize, setFontSize] = useState('medium');
+  const [fontSize, setFontSize] = useState('30px');
   const [fontFamily, setFontFamily] = useState('Arial');
   const [fontColor, setFontColor] = useState('#000000');
   const [textCase, setTextCase] = useState('none');
@@ -28,7 +28,12 @@ const App = () => {
   };
 
   const handleChangeFontSize = (selectedSize) => {
-    setFontSize(selectedSize);
+    const sizeMap = {
+      small: '15px',
+      medium: '30px',
+      large: '45px'
+    };
+    setFontSize(sizeMap[selectedSize]);
     setActiveFontSize(selectedSize);
   };
 
