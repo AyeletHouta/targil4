@@ -1,4 +1,5 @@
 import React from 'react';
+import '../css/Keyboard.css';
 
 const Keyboard = ({ onKeyPress, language, textCase }) => {
   const englishLayout = [

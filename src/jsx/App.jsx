@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './App.css';
-import Keyboard from './Keyboard';
+import '../css/App.css';
+import Keyboard from '../jsx/Keyboard.jsx';
 
 const App = () => {
   const [text, setText] = useState('');
